@@ -68,3 +68,15 @@ All Models are wrong, some are useful.
 
 
 ## 技术选型
+* 整个工程由：物理、渲染、本地ML、网络、Editor GUI、场景管理、脚本绑定等模块，以插件模块的形式组成，除了有强依赖以外（如物理渲染依赖场景），每一个组件默认支持可拆分。
+* Host使用C++, Python，Lua等语言运行时，GPU Device使用Luisa Compute提供的跨平台支持，默认可以做到Windows, Linux, MacOS上编译、运行。
+    * 业务方面，讲究适合的系统做适合的事情。
+    * Windows提供稳定的实时gpu计算与渲染平台(dx12, vulkan等)，优先提供前端实时编辑服务。
+    * Linux则注重后端计算(llvm, cuda等)，优先提供远端部署服务。
+    * Mac用户通常聚焦于轻量办公，远程工作，优先提供云服务到win, linux等系统。
+* 渲染自研路径追踪渲染器，使用光谱渲染，支持衍射光栅等高级材质，理论可用于不可见光渲染，支持实时预览，大场景，离线高精度。
+* 物理模拟使用Lib-UIPC作为基底，离线无穿透物理计算，保证高精度无偏仿真。实时可提供AVBD等先进实时物理算法做预览等
+* 本地ML考虑基于CUDA等后端的libtorch、onnx-api等部署，通过Luisa Compute提供的interop插件完成与其他组件的无缝互联.
+* Editor GUI使用IMGUI，配合脚本可以做到自动生成，方便二次开发。
+* 网络部分，结合游戏引擎的开发经验，搭建云连接。API调用等工作，等同于脚本绑定。（下文）
+* 由C++等原生语言提供接口，Clang预处理反射，生成脚本绑定代码，做到默认多语言支持。LuisaCompute同样提供了pybind，与Taichi，Warp等相仿。
